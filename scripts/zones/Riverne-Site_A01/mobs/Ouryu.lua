@@ -1,13 +1,10 @@
 -----------------------------------
--- Area: Riverne-Site_A01
---  MOB: Ouryu
+-- Area: Riverne - Site A01
+--  Mob: Ouryu
 -----------------------------------
 require("scripts/globals/titles");
 -----------------------------------
 
-function onMobSpawn(mob)
-end;
-
 function onMobDeath(mob, player, isKiller)
-    player:addTitle(OURYU_OVERWHELMER);
+    player:addTitle(dsp.title.OURYU_OVERWHELMER);
 end;

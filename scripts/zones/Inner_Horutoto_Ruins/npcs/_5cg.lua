@@ -3,27 +3,19 @@
 --  NPC: _5cg (Gate of Fire)
 -- !pos -332 0 99 192
 -----------------------------------
-package.loaded["scripts/zones/Inner_Horutoto_Ruins/TextIDs"] = nil;
------------------------------------
-require("scripts/zones/Inner_Horutoto_Ruins/TextIDs");
+local ID = require("scripts/zones/Inner_Horutoto_Ruins/IDs")
 -----------------------------------
 
-function onTrade(player,npc,trade)
-end;
+function onTrade(player, npc, trade)
+end
 
-function onTrigger(player,npc)
+function onTrigger(player, npc)
+    player:messageSpecial(ID.text.DOOR_FIRMLY_CLOSED)
+    return 1
+end
 
-    player:messageSpecial(DOOR_FIRMLY_CLOSED);
-    return 1;
+function onEventUpdate(player, csid, option)
+end
 
-end;
-
-function onEventUpdate(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
-end;
-
-function onEventFinish(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
-end;
+function onEventFinish(player, csid, option)
+end

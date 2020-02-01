@@ -1,38 +1,33 @@
 -----------------------------------
--- Area: Davoi
+-- Area: Yhoator Jungle
 --  NPC: ??? (qm3)
 -- Involved in Quest: True will
 -- !pos 203 0.1 82 124
 -----------------------------------
-package.loaded["scripts/zones/Yhoator_Jungle/TextIDs"] = nil;
+local ID = require("scripts/zones/Yhoator_Jungle/IDs")
+require("scripts/globals/keyitems")
+require("scripts/globals/npc_util")
+require("scripts/globals/quests")
 -----------------------------------
-require("scripts/zones/Yhoator_Jungle/TextIDs");
-require("scripts/zones/Yhoator_Jungle/MobIDs");
-require("scripts/globals/keyitems");
-require("scripts/globals/quests");
+
 function onTrade(player,npc,trade)
-end;
+end
 
 function onTrigger(player,npc)
-    if (player:getQuestStatus(OUTLANDS,TRUE_WILL) == QUEST_ACCEPTED and not player:hasKeyItem(OLD_TRICK_BOX)) then
-        if (player:getVar("trueWillKilledNM") >= 1) then
-            if (GetMobByID(KAPPA_AKUSO):isDead() and GetMobByID(KAPPA_BONZE):isDead() and GetMobByID(KAPPA_BIWA):isDead()) then
-                player:addKeyItem(OLD_TRICK_BOX);
-                player:messageSpecial(KEYITEM_OBTAINED,OLD_TRICK_BOX);
-                player:setVar("trueWillKilledNM",0);
-            end
+    if player:getQuestStatus(OUTLANDS, dsp.quest.id.outlands.TRUE_WILL) == QUEST_ACCEPTED and not player:hasKeyItem(dsp.ki.OLD_TRICK_BOX) then
+        if player:getCharVar("trueWillKilledNM") > 0 then
+            npcUtil.giveKeyItem(player, dsp.ki.OLD_TRICK_BOX)
+            player:setCharVar("trueWillKilledNM", 0)
         else
-            SpawnMob(KAPPA_AKUSO):updateClaim(player);
-            SpawnMob(KAPPA_BONZE):updateClaim(player);
-            SpawnMob(KAPPA_BIWA):updateClaim(player);
+            npcUtil.popFromQM(player, npc, {ID.mob.KAPPA_AKUSO, ID.mob.KAPPA_BONZE, ID.mob.KAPPA_BIWA}, { hide = 0 })
         end
     else
-        player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
+        player:messageSpecial(ID.text.NOTHING_OUT_OF_ORDINARY)
     end
-end;
+end
 
 function onEventUpdate(player,csid,option)
-end;
+end
 
 function onEventFinish(player,csid,option)
-end;
+end

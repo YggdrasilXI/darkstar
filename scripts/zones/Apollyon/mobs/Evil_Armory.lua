@@ -1,16 +1,9 @@
 -----------------------------------
 -- Area: Apollyon SE
---  NPC: Evil_Armory
-
------------------------------------
-package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
+--  Mob: Evil Armory
 -----------------------------------
 require("scripts/globals/limbus");
-require("scripts/zones/Apollyon/TextIDs");
 -----------------------------------
-
-function onMobSpawn(mob)
-end;
 
 function onMobEngaged(mob,target)
     GetMobByID(16933033):updateEnmity(target);
@@ -34,6 +27,6 @@ function onMobDespawn(mob)
  local mobZ = mob:getZPos();
 
   GetNPCByID(16932864+263):setPos(mobX,mobY,mobZ);
-  GetNPCByID(16932864+263):setStatus(STATUS_NORMAL);
+  GetNPCByID(16932864+263):setStatus(dsp.status.NORMAL);
 
 end;

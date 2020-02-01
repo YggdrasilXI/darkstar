@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -30,27 +30,27 @@
 #include "../entities/charentity.h"
 
 
-CMessageStandardPacket::CMessageStandardPacket(uint16 MessageID)
+CMessageStandardPacket::CMessageStandardPacket(MsgStd MessageID)
 {
     this->type = 0x09;
 	this->size = 0x08;
 
-    ref<uint16>(0x0A) = MessageID;
+    ref<uint16>(0x0A) = static_cast<uint16>(MessageID);
 }
 
-CMessageStandardPacket::CMessageStandardPacket(CCharEntity* PChar, uint32 param0, uint32 param1, uint16 MessageID)
+CMessageStandardPacket::CMessageStandardPacket(CCharEntity* PChar, uint32 param0, uint32 param1, MsgStd MessageID)
 {
 	this->type = 0x09;
 	this->size = 0x12;
 
-	ref<uint16>(0x0A) = MessageID;
+	ref<uint16>(0x0A) = static_cast<uint16>(MessageID);
 
 	if (PChar != nullptr)
 	{
 		ref<uint32>(0x04) = PChar->id;
 		ref<uint16>(0x08) = PChar->targid;
 		
-		if (MessageID == 0x59) 
+		if (MessageID == MsgStd::Examine) 
 		{
 			this->size = 0x30;
 
@@ -65,32 +65,27 @@ CMessageStandardPacket::CMessageStandardPacket(CCharEntity* PChar, uint32 param0
 	}
 }
 
-CMessageStandardPacket::CMessageStandardPacket(uint32 param0, uint32 param1, uint32 param2, uint32 param3, uint16 MessageID)
+CMessageStandardPacket::CMessageStandardPacket(uint32 param0, uint32 param1, uint32 param2, uint32 param3, MsgStd MessageID)
 {
 	this->type = 0x09;
 	this->size = 0x08;
 
-	ref<uint16>(0x0A) = MessageID;
+	ref<uint16>(0x0A) = static_cast<uint16>(MessageID);
 
 	snprintf((char*)data+(0x0D), 100, "Para0 %d Para1 %d Para2 %d Para3 %d", param0, param1, param2, param3);
 
 	this->size += (strlen((char*)data+(0x0D)) >> 1) & 0xFE;
 }
 
-/************************************************************************
-*																		*
-*  Используется только для 0x58-го сообщения (/diceroll) 				*
-*																		*
-************************************************************************/
-
-CMessageStandardPacket::CMessageStandardPacket(CCharEntity* PChar, uint32 param0, uint16 MessageID)
+// Only used with MsgStd::DiceRoll (/random)
+CMessageStandardPacket::CMessageStandardPacket(CCharEntity* PChar, uint32 param0, MsgStd MessageID)
 {
 	this->type = 0x09;
 	this->size = 0x18;
 
 	//DSP_DEBUG_BREAK_IF(MessageID != 0x58);
 
-	ref<uint16>(0x0A) = MessageID;
+	ref<uint16>(0x0A) = static_cast<uint16>(MessageID);
 
 	snprintf((char*)data+(0x0D), 40, "string2 %s string3 %u", PChar->GetName(), param0);
 

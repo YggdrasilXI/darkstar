@@ -23,8 +23,9 @@ This file is part of DarkStar-server source code.
 
 #include "lua_item.h"
 
+#include "../../common/showmsg.h"
 #include "../items/item.h"
-#include "../items/item_armor.h"
+#include "../items/item_equipment.h"
 #include "../items/item_weapon.h"
 #include "../items/item_general.h"
 
@@ -146,7 +147,7 @@ inline int32 CLuaItem::getMod(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PLuaItem == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CItemArmor* PItem = (CItemArmor*)m_PLuaItem;
+    CItemEquipment* PItem = (CItemEquipment*)m_PLuaItem;
 
     Mod mod = static_cast<Mod>(lua_tointeger(L, 1));
 
@@ -160,7 +161,7 @@ inline int32 CLuaItem::addMod(lua_State* L)
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
 
-    CItemArmor* PItem = (CItemArmor*)m_PLuaItem;
+    CItemEquipment* PItem = (CItemEquipment*)m_PLuaItem;
 
     Mod mod = static_cast<Mod>(lua_tointeger(L, 1));
     auto power = (int16)lua_tointeger(L, 2);
@@ -175,7 +176,7 @@ inline int32 CLuaItem::delMod(lua_State* L)
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
 
-    CItemArmor* PItem = (CItemArmor*)m_PLuaItem;
+    CItemEquipment* PItem = (CItemEquipment*)m_PLuaItem;
 
     Mod mod = static_cast<Mod>(lua_tointeger(L, 1));
     auto power = (int16)lua_tointeger(L, 2);
@@ -189,7 +190,7 @@ inline int32 CLuaItem::getAugment(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PLuaItem == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CItemArmor* PItem = (CItemArmor*)m_PLuaItem;
+    CItemEquipment* PItem = (CItemEquipment*)m_PLuaItem;
 
     auto slot = (uint8)lua_tointeger(L, 1);
     uint16 augment = PItem->getAugment(slot);
@@ -229,6 +230,57 @@ inline int32 CLuaItem::getWeaponskillPoints(lua_State* L)
 
     return 1;
 }
+
+inline int32 CLuaItem::isTwoHanded(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaItem == nullptr);
+
+    if (CItemWeapon* PWeapon = dynamic_cast<CItemWeapon*>(m_PLuaItem))
+    {
+        lua_pushboolean(L, PWeapon->isTwoHanded());
+    }
+    else
+    {
+        ShowError(CL_RED"CLuaItem::isTwoHanded - not a valid Weapon.\n" CL_RESET);
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
+
+inline int32 CLuaItem::isHandToHand(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaItem == nullptr);
+
+    if (CItemWeapon* PWeapon = dynamic_cast<CItemWeapon*>(m_PLuaItem))
+    {
+        lua_pushboolean(L, PWeapon->isHandToHand());
+    }
+    else
+    {
+        ShowError(CL_RED"CLuaItem::isHandToHand - not a valid Weapon.\n" CL_RESET);
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
+
+inline int32 CLuaItem::isShield(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaItem == nullptr);
+
+    if (CItemEquipment* PArmor = dynamic_cast<CItemEquipment*>(m_PLuaItem))
+    {
+        lua_pushboolean(L, PArmor->IsShield());
+    }
+    else
+    {
+        ShowError(CL_RED"CLuaItem::isShield - not a valid Armor.\n" CL_RESET);
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
 //==========================================================//
 
 const char CLuaItem::className[] = "CItem";
@@ -252,5 +304,8 @@ Lunar<CLuaItem>::Register_t CLuaItem::methods[] =
     LUNAR_DECLARE_METHOD(CLuaItem,getAugment),
     LUNAR_DECLARE_METHOD(CLuaItem,getSkillType),
     LUNAR_DECLARE_METHOD(CLuaItem,getWeaponskillPoints),
+    LUNAR_DECLARE_METHOD(CLuaItem,isTwoHanded),
+    LUNAR_DECLARE_METHOD(CLuaItem,isHandToHand),
+    LUNAR_DECLARE_METHOD(CLuaItem,isShield),
     {nullptr,nullptr}
 };

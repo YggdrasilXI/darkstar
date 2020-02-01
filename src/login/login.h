@@ -27,6 +27,7 @@
 #include "../common/cbasetypes.h"
 
 #include <list>
+#include <functional>
 
 #include "../common/kernel.h"
 #include "../common/socket.h"
@@ -34,8 +35,6 @@
 #include "../common/mmo.h"
 
 #include "login_session.h"
-
-extern lan_config_t lan_config;
 
 struct login_config_t
 {
@@ -66,11 +65,17 @@ struct login_config_t
 struct version_info_t
 {
     std::string client_ver;         // Expected Client version
-    bool enable_ver_lock;
+    uint8 ver_lock;                 // version lock type - (0 - disabled, 1 - enabled - strict, 2 - enabled - greater than or equal
+};
+
+struct maint_config_t
+{
+    uint8 maint_mode;               // maintenance mode - (0 - disabled, 1 - enabled)
 };
 
 extern login_config_t login_config;
 extern version_info_t version_info;
+extern maint_config_t maint_config;
 
 extern Sql_t *SqlHandle;
 //////////////////////////////////////////////////////////
@@ -87,10 +92,17 @@ void login_versionscreen(int32 flag);
  * Login-Server Config [venom]
  *------------------------------------------*/
 
-int32 login_config_read(const char *cfgName);
-int32 login_config_default();
+void login_config_read(const char *key, const char* value);
+void login_config_default();
 
-int32 version_info_read(const char *cfgName);
-int32 version_info_default();
+void version_info_read(const char *key, const char* value);
+void version_info_default();
+
+void maint_config_read(const char *key, const char* value);
+void maint_config_default();
+std::string maint_config_write(const char* key);
+
+int32 config_read(const char* fileName, const char *config, std::function<void(const char*, const char*)> method);
+int32 config_write(const char* fileName, const char *config, std::function<std::string(const char*)> method);
 
 #endif

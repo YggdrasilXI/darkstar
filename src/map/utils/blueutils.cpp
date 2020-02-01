@@ -129,15 +129,15 @@ void TryLearningSpells(CCharEntity* PChar, CMobEntity* PMob) {
 			}
 
             // get the skill cap for the spell level
-            auto skillLvlForSpell = battleutils::GetMaxSkill(SKILL_BLU, JOB_BLU, PSpell->getJob(JOB_BLU));
+            auto skillLvlForSpell = battleutils::GetMaxSkill(SKILL_BLUE_MAGIC, JOB_BLU, PSpell->getJob(JOB_BLU));
             // get player skill level with bonus from gear
-            auto playerSkillLvl = PBlueMage->GetSkill(SKILL_BLU);
+            auto playerSkillLvl = PBlueMage->GetSkill(SKILL_BLUE_MAGIC);
 
             // make sure the difference between spell skill and player is at most 31 points
             if (playerSkillLvl >= skillLvlForSpell - 31)
             {
-                // TODO: check for blue learning bonus and adjust base percent
-                if (dsprand::GetRandomNumber(100) < 33) {
+                auto chanceToLearn = 33 + PBlueMage->getMod(Mod::BLUE_LEARN_CHANCE);
+                if (dsprand::GetRandomNumber(100) < chanceToLearn) {
 					if (charutils::addSpell(PBlueMage, static_cast<uint16>(PSpell->getID()))) {
 						PBlueMage->pushPacket(new CMessageBasicPacket(PBlueMage, PBlueMage, static_cast<uint16>(PSpell->getID()), 0, MSGBASIC_LEARNS_SPELL));
 						charutils::SaveSpell(PBlueMage, static_cast<uint16>(PSpell->getID()));
@@ -416,7 +416,7 @@ void CalculateTraits(CCharEntity* PChar)
 
                 if (iter != points.end())
                 {
-                    iter->second += iter->second + weight;
+                    iter->second += weight;
                 }
                 else
                 {

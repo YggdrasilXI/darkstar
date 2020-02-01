@@ -1,12 +1,10 @@
 -----------------------------------
--- Area: Qu'Bia Arena   
--- MOB: Nephiyl Keepcollapser
--- Fight:  Demolition Squad
+-- Area: Qu'Bia Arena
+--  Mob: Nephiyl Keepcollapser
+-- BCNM: Demolition Squad
 -----------------------------------
-mixins = {require("scripts/mixins/job_special")};
-
-function onMobSpawn(mob)
-end;
+mixins = {require("scripts/mixins/job_special")}
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
-end;
+end

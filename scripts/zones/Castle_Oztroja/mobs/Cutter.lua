@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Castle Oztroja (151)
---  MOB: Cutter
+--  Mob: Cutter
 -----------------------------------
 
 function onMobSpawn(mob)
-    mob:setMobMod(MOBMOD_CHARMABLE, 1);
+    mob:setMobMod(dsp.mobMod.CHARMABLE, 1);
 end;
 
 function onMobDeath(mob, player, isKiller)

@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: dspdb
 -- ------------------------------------------------------
--- Server version	5.5.29-0ubuntu0.12.04.2
+-- Server version   5.5.29-0ubuntu0.12.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,6 +36,7 @@ CREATE TABLE `mob_pets` (
 
 LOCK TABLES `mob_pets` WRITE;
 /*!40000 ALTER TABLE `mob_pets` DISABLE KEYS */;
+INSERT INTO `mob_pets` VALUES (16785713, 1, 15);
 INSERT INTO `mob_pets` VALUES (16793746, 1, 9);
 INSERT INTO `mob_pets` VALUES (16793751, 1, 9);
 INSERT INTO `mob_pets` VALUES (16793777, 1, 9);
@@ -617,6 +618,7 @@ INSERT INTO `mob_pets` VALUES (17428662, 1, 15);
 INSERT INTO `mob_pets` VALUES (17428664, 1, 15);
 INSERT INTO `mob_pets` VALUES (17428673, 1, 15);
 INSERT INTO `mob_pets` VALUES (17428675, 1, 15);
+INSERT INTO `mob_pets` VALUES (17428677, 1, 15); -- Tonberry Kinq
 INSERT INTO `mob_pets` VALUES (17428680, 1, 15);
 INSERT INTO `mob_pets` VALUES (17428683, 1, 15);
 INSERT INTO `mob_pets` VALUES (17428691, 1, 15);
@@ -681,10 +683,6 @@ INSERT INTO `mob_pets` VALUES (17444867, 1, 15);
 INSERT INTO `mob_pets` VALUES (17444872, 1, 15);
 INSERT INTO `mob_pets` VALUES (17444877, 1, 15);
 INSERT INTO `mob_pets` VALUES (17453078, 2, 15);
-INSERT INTO `mob_pets` VALUES (17461402, 1, 15);
-INSERT INTO `mob_pets` VALUES (17461409, 1, 15);
-INSERT INTO `mob_pets` VALUES (17461417, 1, 15);
-INSERT INTO `mob_pets` VALUES (17461421, 1, 15);
 INSERT INTO `mob_pets` VALUES (17506670, 5, 15); -- Kirin's Avatar is offset by 5 (first 4 are the god spawns)
 INSERT INTO `mob_pets` VALUES (17375263, 1, 15);
 INSERT INTO `mob_pets` VALUES (17375265, 1, 15);
@@ -818,9 +816,9 @@ INSERT INTO `mob_pets` VALUES (17346569, 3, 14); -- Orc_s_Wyvern
 -- INSERT INTO `mob_pets` VALUES (17346577, 1, 14); -- Orc_s_Wyvern
 -- INSERT INTO `mob_pets` VALUES (17346583, 1, 14); -- Orc_s_Wyvern
 INSERT INTO `mob_pets` VALUES (17387585, 1, 14); -- Orc_s_Wyvern
--- INSERT INTO `mob_pets` VALUES (17444904, 2, 14); -- Sahagin_s_Wyvern
--- INSERT INTO `mob_pets` VALUES (17444910, 2, 14); -- Sahagin_s_Wyvern
--- INSERT INTO `mob_pets` VALUES (17444916, 2, 14); -- Sahagin_s_Wyvern
+INSERT INTO `mob_pets` VALUES (17444904, 2, 14); -- Sahagin_s_Wyvern
+INSERT INTO `mob_pets` VALUES (17444910, 2, 14); -- Sahagin_s_Wyvern
+INSERT INTO `mob_pets` VALUES (17444916, 2, 14); -- Sahagin_s_Wyvern
 INSERT INTO `mob_pets` VALUES (17465360, 1, 14); -- Maat_s_Wyvern
 INSERT INTO `mob_pets` VALUES (17465362, 1, 14); -- Maat_s_Wyvern
 INSERT INTO `mob_pets` VALUES (17465364, 1, 14); -- Maat_s_Wyvern
@@ -1336,6 +1334,8 @@ INSERT INTO `mob_pets` VALUES (17183019, 1, 15); -- Yagudo_s_Elemental
 INSERT INTO `mob_pets` VALUES (17183021, 1, 15); -- Yagudo_s_Elemental
 
 INSERT INTO `mob_pets` VALUES (16986197, 1, 9); -- Percipient_Zoraal_Ja
+
+
 
 /*!40000 ALTER TABLE `mob_pets` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -3,42 +3,29 @@
 --  NPC: <this space intentionally left blank>
 -- !pos -18 40 20 205
 -----------------------------------
-package.loaded["scripts/zones/Ifrits_Cauldron/TextIDs"] = nil;
+local ID = require("scripts/zones/Ifrits_Cauldron/IDs")
+require("scripts/globals/npc_util")
 -----------------------------------
-require("scripts/zones/Ifrits_Cauldron/TextIDs");
------------------------------------
 
-function onTrade(player,npc,trade)
-   -- Working on correct relic, 4 items, Stage 4 item, Shard, Necropsyche, currencypiece
-    if (player:getVar("RELIC_IN_PROGRESS") == 18329 and trade:getItemCount() == 4 and trade:hasItemQty(18329,1) and
-       trade:hasItemQty(1582,1) and trade:hasItemQty(1589,1) and trade:hasItemQty(1451,1)) then
-         player:startEvent(32,18330);
+function onTrade(player, npc, trade)
+    if
+        player:getCharVar("RELIC_IN_PROGRESS") == 18329 and
+        npcUtil.tradeHas(trade, {1451, 1582, 1589, 18329}) -- currency, shard, necropsyche, stage 4
+    then
+        player:startEvent(32, 18330)
     end
-end;
+end
 
-function onTrigger(player,npc)
-    player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
-end;
+function onTrigger(player, npc)
+    player:messageSpecial(ID.text.NOTHING_OUT_OF_ORDINARY)
+end
 
-function onEventUpdate(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
-end;
+function onEventUpdate(player, csid, option)
+end
 
-function onEventFinish(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
-    if (csid == 32) then
-      if (player:getFreeSlotsCount() < 2) then
-         player:messageSpecial(ITEM_CANNOT_BE_OBTAINED,18330);
-         player:messageSpecial(FULL_INVENTORY_AFTER_TRADE,1450);
-      else
-         player:tradeComplete();
-         player:addItem(18330);
-         player:addItem(1450,30);
-         player:messageSpecial(ITEM_OBTAINED,18330);
-         player:messageSpecial(ITEMS_OBTAINED,1450,30);
-         player:setVar("RELIC_IN_PROGRESS",0);
-      end
+function onEventFinish(player, csid, option)
+    if csid == 32 and npcUtil.giveItem(player, {18330, {1450, 30}}) then
+        player:setCharVar("RELIC_IN_PROGRESS", 0)
+        player:confirmTrade()
     end
-end;
+end

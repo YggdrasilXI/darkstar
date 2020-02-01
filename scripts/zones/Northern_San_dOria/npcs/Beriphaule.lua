@@ -12,13 +12,13 @@ end;
 
 function onTrigger(player,npc)
 
-    local new_nation = NATION_SANDORIA;
+    local new_nation = dsp.nation.SANDORIA;
     local old_nation = player:getNation();
     local rank = getNationRank(new_nation);
 
     if (old_nation == new_nation) then
         player:startEvent(608,0,0,0,old_nation);
-    elseif (player:getCurrentMission(old_nation) ~= 255 or player:getVar("MissionStatus") ~= 0) then
+    elseif (player:getCurrentMission(old_nation) ~= 255 or player:getCharVar("MissionStatus") ~= 0) then
         player:startEvent(607,0,0,0,new_nation);
     elseif (old_nation ~= new_nation) then
         local has_gil = 0;
@@ -41,16 +41,12 @@ function onTrigger(player,npc)
 end;
 
 function onEventUpdate(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
 end;
 
 function onEventFinish(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
 
     if (csid == 606 and option == 1) then
-        local new_nation = NATION_SANDORIA;
+        local new_nation = dsp.nation.SANDORIA;
         local rank = getNationRank(new_nation);
         local cost = 0;
 

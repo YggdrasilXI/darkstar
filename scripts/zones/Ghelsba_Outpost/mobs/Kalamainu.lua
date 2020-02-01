@@ -1,15 +1,8 @@
 -----------------------------------
--- Area: Ghelsba outpost
---  MOB: Kalamainu
--- BCNM30
+-- Area: Ghelsba Outpost
+--  Mob: Kalamainu
+-- BCNM: Petrifying Pair
 -----------------------------------
 
-function onMobSpawn(mob)
-end;
-
-function onMobEngaged(mob,target)
-    GetMobByID(17350934):updateEnmity(target);
-end;
-
 function onMobDeath(mob, player, isKiller)
-end;
+end

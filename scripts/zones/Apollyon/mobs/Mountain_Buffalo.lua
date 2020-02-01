@@ -1,18 +1,7 @@
 -----------------------------------
 -- Area: Apollyon NW
---  NPC: Kaiser Behemoth
-
+--  Mob: Mountain Buffalo
 -----------------------------------
-package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
------------------------------------
-require("scripts/zones/Apollyon/TextIDs");
------------------------------------
-
-function onMobSpawn(mob)
-end;
-
-function onMobEngaged(mob,target)
-end;
 
 function onMobDeath(mob, player, isKiller)
 end;
@@ -26,15 +15,15 @@ function onMobDespawn(mob)
 
  if (mobID ==16932951) then -- recover
        GetNPCByID(16932864+289):setPos(mobX,mobY,mobZ);
-    GetNPCByID(16932864+289):setStatus(STATUS_NORMAL);
+    GetNPCByID(16932864+289):setStatus(dsp.status.NORMAL);
  elseif (mobID ==16932952) then -- timer 1
        GetNPCByID(16932864+43):setPos(mobX,mobY,mobZ);
-    GetNPCByID(16932864+43):setStatus(STATUS_NORMAL);
+    GetNPCByID(16932864+43):setStatus(dsp.status.NORMAL);
  elseif (mobID ==16932954) then -- timer 2
       GetNPCByID(16932864+44):setPos(mobX,mobY,mobZ);
-    GetNPCByID(16932864+44):setStatus(STATUS_NORMAL);
+    GetNPCByID(16932864+44):setStatus(dsp.status.NORMAL);
  elseif (mobID ==16932957) then -- timer 3
       GetNPCByID(16932864+45):setPos(mobX,mobY,mobZ);
-    GetNPCByID(16932864+45):setStatus(STATUS_NORMAL);
+    GetNPCByID(16932864+45):setStatus(dsp.status.NORMAL);
  end
 end;

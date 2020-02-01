@@ -4,37 +4,19 @@
 -- !pos -118 -8 -520 82
 -- Teleports Players to Jugner Forest
 -----------------------------------
-package.loaded["scripts/zones/Jugner_Forest_[S]/TextIDs"] = nil;
------------------------------------
-require("scripts/globals/keyitems");
-require("scripts/globals/teleports");
-require("scripts/globals/campaign");
-require("scripts/zones/Jugner_Forest_[S]/TextIDs");
+require("scripts/globals/maws")
 -----------------------------------
 
-function onTrade(player,npc,trade)
-end;
+function onTrade(player, npc, trade)
+end
 
-function onTrigger(player,npc)
-    if (hasMawActivated(player,3) == false) then
-        player:startEvent(101);
-    else
-        player:startEvent(102);
-    end
-end;
+function onTrigger(player, npc)
+    dsp.maws.onTrigger(player, npc)
+end
 
-function onEventUpdate(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
-end;
+function onEventUpdate(player, csid, option)
+end
 
-function onEventFinish(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
-    if (option == 1) then
-        if (csid == 101) then
-            player:addNationTeleport(MAW,8);
-        end
-        toMaw(player,14);
-    end
-end;
+function onEventFinish(player, csid, option)
+    dsp.maws.onEventFinish(player, csid, option)
+end

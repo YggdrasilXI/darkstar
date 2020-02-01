@@ -42,6 +42,7 @@
 #include "../map.h"
 #include "../trade_container.h"
 #include "../vana_time.h"
+#include "../anticheat.h"
 
 #include "charutils.h"
 #include "itemutils.h"
@@ -72,7 +73,7 @@ bool isRightRecipe(CCharEntity* PChar)
     const char* fmtQuery =
 
         "SELECT ID, KeyItem, Wood, Smith, Gold, Cloth, Leather, Bone, Alchemy, Cook, \
-            Result, ResultHQ1, ResultHQ2, ResultHQ3, ResultQty, ResultHQ1Qty, ResultHQ2Qty, ResultHQ3Qty \
+            Result, ResultHQ1, ResultHQ2, ResultHQ3, ResultQty, ResultHQ1Qty, ResultHQ2Qty, ResultHQ3Qty, Desynth \
         FROM synth_recipes \
         WHERE (Crystal = %u OR HQCrystal = %u) \
             AND Ingredient1 = %u \
@@ -117,6 +118,7 @@ bool isRightRecipe(CCharEntity* PChar)
             PChar->CraftContainer->setItem(10 + 2, (uint16)Sql_GetUIntData(SqlHandle,11), (uint8)Sql_GetUIntData(SqlHandle,15), 0); // RESULT_HQ
             PChar->CraftContainer->setItem(10 + 3, (uint16)Sql_GetUIntData(SqlHandle,12), (uint8)Sql_GetUIntData(SqlHandle,16), 0); // RESULT_HQ2
             PChar->CraftContainer->setItem(10 + 4, (uint16)Sql_GetUIntData(SqlHandle,13), (uint8)Sql_GetUIntData(SqlHandle,17), 0); // RESULT_HQ3
+            PChar->CraftContainer->setCraftType((uint8)Sql_GetUIntData(SqlHandle, 18));
 
             uint16 skillValue   = 0;
             uint16 currentSkill = 0;
@@ -356,7 +358,7 @@ uint8 calcSynthResult(CCharEntity* PChar)
             }
 
             // Apply synthesis success rate modifier
-            int16 modSynthSuccess = PChar->getMod(Mod::SYNTH_SUCCESS);
+            int16 modSynthSuccess = PChar->CraftContainer->getCraftType() == CRAFT_SYNTHESIS ? PChar->getMod(Mod::SYNTH_SUCCESS) : PChar->getMod(Mod::DESYNTH_SUCCESS);
             success += (double)modSynthSuccess * 0.01;
 
             if(!canSynthesizeHQ(PChar,skillID))
@@ -389,10 +391,10 @@ uint8 calcSynthResult(CCharEntity* PChar)
 
                     switch(hqtier)
                     {
-                        case 4:  chance = 0.500; break;
-                        case 3:  chance = 0.300; break;
-                        case 2:  chance = 0.100; break;
-                        case 1:  chance = 0.015; break;
+                        case 4:  chance = 0.5; break; // 1 in 2
+                        case 3:  chance = 0.25; break; // 1 in 4
+                        case 2:  chance = 0.0625; break; // 1 in 16
+                        case 1:  chance = 0.015625; break; // 1 in 64
                         default: chance = 0.000; break;
                     }
 
@@ -622,56 +624,15 @@ int32 doSynthSkillUp(CCharEntity* PChar)
 
 int32 doSynthFail(CCharEntity* PChar)
 {
-    uint8  carrentCraft = PChar->CraftContainer->getInvSlotID(0);
-    double synthDiff    = getSynthDifficulty(PChar, carrentCraft);
-    double moghouseAura = 0;
+    uint8 currentCraft = PChar->CraftContainer->getInvSlotID(0);
+    double synthDiff    = getSynthDifficulty(PChar, currentCraft);
     int16 modSynthFailRate = PChar->getMod(Mod::SYNTH_FAIL_RATE);
 
-    if (PChar->m_moghouseID) // неправильное условие, т.к. аура действует лишь в собственном доме
-    {
-        // Проверяем элемент синтеза
-        switch (PChar->CraftContainer->getType())
-        {
-            case ELEMENT_FIRE:      moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_FIRE);      break;
-            case ELEMENT_EARTH:     moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_EARTH);     break;
-            case ELEMENT_WATER:     moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_WATER);     break;
-            case ELEMENT_WIND:      moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_WIND);      break;
-            case ELEMENT_ICE:       moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_ICE);       break;
-            case ELEMENT_LIGHTNING: moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_LIGHTNING); break;
-            case ELEMENT_LIGHT:     moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_LIGHT);     break;
-            case ELEMENT_DARK:      moghouseAura = 0.05 * charutils::hasKeyItem(PChar,MOGHANCEMENT_DARK);      break;
-        }
-
-        if (moghouseAura == 0)
-        {
-            switch (carrentCraft)
-            {
-                case SKILL_WOODWORKING:  moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_WOODWORKING);  break;
-                case SKILL_SMITHING:     moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_SMITHING);     break;
-                case SKILL_GOLDSMITHING: moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_GOLDSMITHING); break;
-                case SKILL_CLOTHCRAFT:   moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_CLOTHCRAFT);   break;
-                case SKILL_LEATHERCRAFT: moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_LEATHERCRAFT); break;
-                case SKILL_BONECRAFT:    moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_BONECRAFT);    break;
-                case SKILL_ALCHEMY:      moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_ALCHEMY);      break;
-                case SKILL_COOKING:      moghouseAura = 0.075 * charutils::hasKeyItem(PChar,MOGLIFICATION_COOKING);      break;
-            }
-        }
-
-        if (moghouseAura == 0)
-        {
-            switch (carrentCraft)
-            {
-                case SKILL_WOODWORKING:  moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_WOODWORKING);  break;
-                case SKILL_SMITHING:     moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_SMITHING);     break;
-                case SKILL_GOLDSMITHING: moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_GOLDSMITHING); break;
-                case SKILL_CLOTHCRAFT:   moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_CLOTHCRAFT);   break;
-                case SKILL_LEATHERCRAFT: moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_LEATHERCRAFT); break;
-                case SKILL_BONECRAFT:    moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_BONECRAFT);    break;
-                case SKILL_ALCHEMY:      moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_ALCHEMY);      break;
-                case SKILL_COOKING:      moghouseAura = 0.1 * charutils::hasKeyItem(PChar,MEGA_MOGLIFICATION_COOKING);      break;
-            }
-        }
-    }
+    // We are able to get the correct elemental mod here by adding the element to it since they are in the same order
+    double reduction = PChar->getMod((Mod)((int32)Mod::SYNTH_FAIL_RATE_FIRE + PChar->CraftContainer->getType()));
+    // Similarly we get the correct craft mod here by adding the current craft to it since they are in the same order
+    reduction += PChar->getMod((Mod)((int32)Mod::SYNTH_FAIL_RATE_WOOD + (currentCraft - SKILL_WOODWORKING)));
+    reduction /= 100.0;
 
     uint8 invSlotID  = 0;
     uint8 nextSlotID = 0;
@@ -679,7 +640,7 @@ int32 doSynthFail(CCharEntity* PChar)
     uint8 totalCount = 0;
 
     double random   = 0;
-    double lostItem = 0.15 - moghouseAura + (synthDiff > 0 ? synthDiff/20 : 0);
+    double lostItem = std::clamp(0.15 - reduction + (synthDiff > 0 ? synthDiff/20 : 0), 0.0, 1.0);
 
     // Translation of JP wiki for the "Synthesis failure rate" modifier is "Synthetic material loss rate"
     // see: http://wiki.ffo.jp/html/18416.html
@@ -810,6 +771,17 @@ int32 startSynth(CCharEntity* PChar)
         return 0;
     }
 
+    // Reserve the items after we know we have the right recipe
+    for (uint8 container_slotID = 0; container_slotID <= 8; ++container_slotID)
+    {
+        auto slotid = PChar->CraftContainer->getInvSlotID(container_slotID);
+        if (slotid != 0xFF)
+        {
+            CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(slotid);
+            PItem->setReserve(PItem->getReserve() + 1);
+        }
+    }
+
     // удаляем кристалл
     auto PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->CraftContainer->getInvSlotID(0));
     PItem->setReserve(PItem->getReserve() - 1);
@@ -864,6 +836,38 @@ int32 startSynth(CCharEntity* PChar)
 int32 doSynthResult(CCharEntity* PChar)
 {
     uint8 m_synthResult = PChar->CraftContainer->getQuantity(0);
+    if (map_config.anticheat_enabled)
+    {
+        std::chrono::duration animationDuration = server_clock::now() - PChar->m_LastSynthTime;
+        if (animationDuration < 5s)
+        {
+            // Attempted cheating - Did not spend enough time doing the synth animation.
+            #ifdef _DSP_SYNTH_DEBUG_MESSAGES_
+            ShowDebug(CL_CYAN"Caught player cheating by injecting synth done packet.\n");
+            #endif
+            // Check whether the cheat type action requires us to actively block the cheating attempt
+            // Note: Due to technical reasons jail action also forces us to break the synth
+            // (player cannot be zoned while synth in progress).
+            bool shouldblock = anticheat::GetCheatPunitiveAction(anticheat::CheatID::CHEAT_ID_FASTSYNTH, nullptr, 0) & (anticheat::CHEAT_ACTION_BLOCK | anticheat::CHEAT_ACTION_JAIL);
+            if (shouldblock)
+            {
+                // Block the cheat by forcing the synth to fail
+                PChar->CraftContainer->setQuantity(0, synthutils::SYNTHESIS_FAIL);
+                m_synthResult = SYNTHESIS_FAIL;
+                doSynthFail(PChar);
+            }
+            // And report the incident (will possibly jail the player)
+            anticheat::ReportCheatIncident(PChar,
+                anticheat::CheatID::CHEAT_ID_FASTSYNTH,
+                (uint32)std::chrono::duration_cast<std::chrono::milliseconds>(animationDuration).count(),
+                "Player attempted to bypass synth animation by injecting synth done packet.");
+            if (shouldblock)
+            {
+                // Blocking the cheat also means that the offender should not get any skillups
+                return 0;
+            }
+        }
+    }
 
     if (m_synthResult == SYNTHESIS_FAIL)
     {

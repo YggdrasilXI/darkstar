@@ -33,11 +33,12 @@
 
 enum EFFECTOVERWRITE
 {
-    EFFECTOVERWRITE_EQUAL_HIGHER = 0, // only overwrite if equal or higher
-    EFFECTOVERWRITE_HIGHER = 1, // only overwrite if higher
+    EFFECTOVERWRITE_EQUAL_HIGHER = 0, // only overwrite if equal or higher (tier, power)
+    EFFECTOVERWRITE_HIGHER = 1, // only overwrite if higher (tier, power)
     EFFECTOVERWRITE_NEVER = 2, // never overwrite
     EFFECTOVERWRITE_ALWAYS = 3, // always overwrite no matter
-    EFFECTOVERWRITE_IGNORE = 4 // ignore dupes
+    EFFECTOVERWRITE_IGNORE = 4, // ignore dupes
+    EFFECTOVERWRITE_TIER_HIGHER = 5 // only overwrite if tier is higher (regardless of power)
 };
 
 enum EFFECTFLAG
@@ -46,7 +47,7 @@ enum EFFECTFLAG
     EFFECTFLAG_DISPELABLE       = 0x0001,
     EFFECTFLAG_ERASABLE         = 0x0002,
     EFFECTFLAG_ATTACK           = 0x0004,   // исчезает при нанесении урона
-
+    EFFECTFLAG_EMPATHY          = 0X0008,   // effect can be copied to wyvern by use of merited Spirit Link
     EFFECTFLAG_DAMAGE           = 0x0010,   // исчезает при получении урона
     EFFECTFLAG_DEATH            = 0x0020,   // исчезает при смерти
     EFFECTFLAG_MAGIC_BEGIN      = 0x0040,   // исчезает перед началом чтения заклинания
@@ -67,6 +68,8 @@ enum EFFECTFLAG
     EFFECTFLAG_BLOODPACT        = 0x200000,
     EFFECTFLAG_ON_JOBCHANGE     = 0x400000, // Removes effect when you change jobs
     EFFECTFLAG_NO_CANCEL        = 0x800000, // CAN NOT CLICK IT OFF IN CLIENT
+    EFFECTFLAG_INFLUENCE        = 0x1000000, // Influence effects - e.g. Signet, Sanction, Sigil, Ionis
+    EFFECTFLAG_OFFLINE_TICK     = 0x2000000, // Duration elapses while offline
 };
 
 enum EFFECT
@@ -784,7 +787,8 @@ public:
          uint32 duration,
          uint32 subid = 0,
          uint16 subPower = 0,
-         uint16 tier = 0);
+         uint16 tier = 0,
+         uint32 flags = 0);
 
    ~CStatusEffect();
 

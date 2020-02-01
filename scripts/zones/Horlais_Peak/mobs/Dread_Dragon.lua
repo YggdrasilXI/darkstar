@@ -1,14 +1,11 @@
 -----------------------------------
 -- Area: Horlais Peak
---  MOB: Dread Dragon
+--  Mob: Dread Dragon
 -- Mission 2-3 BCNM Fight
 -----------------------------------
 require("scripts/globals/titles");
 -----------------------------------
 
-function onMobSpawn(mob)
-end;
-
 function onMobDeath(mob, player, isKiller)
-    player:addTitle(DREAD_DRAGON_SLAYER);
+    player:addTitle(dsp.title.DREAD_DRAGON_SLAYER);
 end;

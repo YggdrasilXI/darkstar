@@ -1,16 +1,8 @@
 -----------------------------------
--- Area: Ghelsba outpost
---  MOB: Colo-colo
--- BCNM20
+-- Area: Ghelsba Outpost
+--  Mob: Colo-colo
+-- BCNM: Wings of Fury
 -----------------------------------
 
-function onMobSpawn(mob)
-end;
-
-function onMobEngaged(mob,target)
-    GetMobByID(17350930):updateEnmity(target);
-    GetMobByID(17350931):updateEnmity(target);
-end;
-
 function onMobDeath(mob, player, isKiller)
-end;
+end

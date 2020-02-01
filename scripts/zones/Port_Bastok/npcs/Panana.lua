@@ -11,9 +11,9 @@ end;
 
 function onTrigger(player,npc)
 
-    OutOfOneShell = player:getQuestStatus(BASTOK,OUT_OF_ONE_S_SHELL);
+    OutOfOneShell = player:getQuestStatus(BASTOK,dsp.quest.id.bastok.OUT_OF_ONE_S_SHELL);
 
-    if (OutOfOneShell == QUEST_ACCEPTED and player:getVar("OutOfTheShellZone") == 0) then
+    if (OutOfOneShell == QUEST_ACCEPTED and player:getCharVar("OutOfTheShellZone") == 0) then
         player:startEvent(83);
     else
         player:startEvent(43);
@@ -22,11 +22,7 @@ function onTrigger(player,npc)
 end;
 
 function onEventUpdate(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
 end;
 
 function onEventFinish(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
 end;

@@ -169,11 +169,11 @@ struct keyitems_t
 
 struct position_t 
 {
+    float x;
+    float y;				// высота расположения сущности относительно "уровня моря"
+    float z;
+    uint16 moving;			// что-то вроде расстояния перемещения, необходимое для правильной отрисовки в клиенте количества шагов сущности 
 	uint8 rotation;			// угол поворота сущности относительно своей позиции (используется 255 система, место 360°)
-	float x;			
-	float y;				// высота расположения сущности относительно "уровня моря"
-	float z;
-	uint16 moving;			// что-то вроде расстояния перемещения, необходимое для правильной отрисовки в клиенте количества шагов сущности 
 };
 
 struct stats_t
@@ -290,21 +290,6 @@ unsigned char a[]={ \
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,\
 			0x00, 0x00, 0x00, 0x00\
 		}
-
-#define LAN_CONFIG_NAME "conf/lan_config.conf"
-
-struct lan_config_t
-{
-	uint32 uiLoginLanIP;
-	uint16 usLoginLanPort;
-
-	uint32 uiMapLanIP;
-	uint16 usMapLanPort;
-
-	uint32 wait_time;
-	uint8  connect_try_num;
-};
-
 
 class char_mini
 {

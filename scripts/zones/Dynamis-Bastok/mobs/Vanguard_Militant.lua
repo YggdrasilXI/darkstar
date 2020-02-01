@@ -1,19 +1,13 @@
 -----------------------------------
--- Area: Dynamis Bastok
---  MOB: Vanguard Militant
+-- Area: Dynamis - Bastok
+--  Mob: Vanguard Militant
 -----------------------------------
-require("scripts/globals/dynamis");
+mixins =
+{
+    require("scripts/mixins/dynamis_beastmen"),
+    require("scripts/mixins/job_special")
+}
 -----------------------------------
-
-function onMobSpawn(mob)
-end;
-
-function onMobEngaged(mob,target)
-end;
 
 function onMobDeath(mob, player, isKiller)
-    if (mob:getID() == 17539301 and alreadyReceived(player,6) == false) then
-        player:addTimeToDynamis(10);
-        addDynamisList(player,32);
-    end
-end;
+end

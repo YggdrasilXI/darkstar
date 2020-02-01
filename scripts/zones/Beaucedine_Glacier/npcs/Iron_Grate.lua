@@ -9,10 +9,7 @@
 -- !pos -20.000 -55.000 -41.000 111   : H-8
 -- !pos -340.000 -95.000 159.000 111  : F-7
 -----------------------------------
-package.loaded["scripts/zones/Beaucedine_Glacier/TextIDs"] = nil;
------------------------------------
 require("scripts/globals/settings");
-require("scripts/zones/Beaucedine_Glacier/TextIDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
@@ -39,13 +36,9 @@ function onTrigger(player,npc)
 end;
 
 function onEventUpdate(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
 end;
 
 function onEventFinish(player,csid,option)
-    -- printf("CSID: %u",csid);
-    -- printf("RESULT: %u",option);
 
     local LVLcap = 0;
 
@@ -68,7 +61,7 @@ function onEventFinish(player,csid,option)
         end
 
         if (ENABLE_COP_ZONE_CAP == 1 ) then
-            player:setVar("PSOXJA_RESTRICTION_LVL",LVLcap);
+            player:setCharVar("PSOXJA_RESTRICTION_LVL",LVLcap);
         end
     end
 end;

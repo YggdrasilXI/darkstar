@@ -1,15 +1,8 @@
 -----------------------------------
--- Area: Ghelsba outpost
---  MOB: Kilioa
--- BCNM30
+-- Area: Ghelsba Outpost
+--  Mob: Kilioa
+-- BCNM: Petrifying Pair
 -----------------------------------
 
-function onMobSpawn(mob)
-end;
-
-function onMobEngaged(mob,target)
-    GetMobByID(17350933):updateEnmity(target);
-end;
-
 function onMobDeath(mob, player, isKiller)
-end;
+end

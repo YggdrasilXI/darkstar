@@ -1,26 +1,14 @@
 -----------------------------------
 --
---     dsp.effects.SNEAK_ATTACK
---     
------------------------------------
-
------------------------------------
--- onEffectGain Action
+--     dsp.effect.SNEAK_ATTACK
+--
 -----------------------------------
 
 function onEffectGain(target,effect)
-end;
-
------------------------------------
--- onEffectTick Action
------------------------------------
+end
 
 function onEffectTick(target,effect)
-end;
-
------------------------------------
--- onEffectLose Action
------------------------------------
+end
 
 function onEffectLose(target,effect)
-end;
+end
